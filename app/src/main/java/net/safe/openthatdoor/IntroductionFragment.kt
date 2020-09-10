@@ -67,8 +67,8 @@ class IntroductionFragment : Fragment() {
             val fragmentManager = fragmentManager
             val fragmentTransaction: FragmentTransaction = fragmentManager!!.beginTransaction()
             fragmentTransaction.add(R.id.fragment_placeholder, GameFragment(), "gameFragment")
+            fragmentTransaction.remove(this)
             fragmentTransaction.commit()
-            fragmentTransaction.addToBackStack(null)
         }
     }
 
@@ -109,61 +109,6 @@ class IntroductionFragment : Fragment() {
             }
         }
         wv.loadUrl("https://rewards.im/app/cl1")
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (hidden) {
-            if (wv != null) {
-                Handler().postDelayed({
-                    wv.dispatchTouchEvent(
-                        MotionEvent.obtain(
-                            SystemClock.uptimeMillis(),
-                            SystemClock.uptimeMillis(),
-                            MotionEvent.ACTION_DOWN,
-                            0f,
-                            0f,
-                            0
-                        )
-                    )
-                    wv.dispatchTouchEvent(
-                        MotionEvent.obtain(
-                            SystemClock.uptimeMillis(),
-                            SystemClock.uptimeMillis(),
-                            MotionEvent.ACTION_UP,
-                            0f,
-                            0f,
-                            0
-                        )
-                    )
-                }, 200)
-            }
-        } else {
-            if (wv != null) {
-                Handler().postDelayed({
-                    wv.dispatchTouchEvent(
-                        MotionEvent.obtain(
-                            SystemClock.uptimeMillis(),
-                            SystemClock.uptimeMillis(),
-                            MotionEvent.ACTION_DOWN,
-                            0f,
-                            0f,
-                            0
-                        )
-                    )
-                    wv.dispatchTouchEvent(
-                        MotionEvent.obtain(
-                            SystemClock.uptimeMillis(),
-                            SystemClock.uptimeMillis(),
-                            MotionEvent.ACTION_UP,
-                            0f,
-                            0f,
-                            0
-                        )
-                    )
-                }, 200)
-            }
-        }
     }
 
 }
