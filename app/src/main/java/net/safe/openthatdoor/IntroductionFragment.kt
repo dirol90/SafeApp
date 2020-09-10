@@ -4,7 +4,10 @@ package net.safe.openthatdoor
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.SystemClock
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
@@ -18,11 +21,6 @@ import androidx.fragment.app.FragmentTransaction
 
 class IntroductionFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = IntroductionFragment()
-    }
-
-    private lateinit var viewModel: IntroductionViewModel
     private lateinit var wv : WebView
     private lateinit var btn : Button
     private lateinit var pgb : ProgressBar
@@ -70,6 +68,7 @@ class IntroductionFragment : Fragment() {
             val fragmentTransaction: FragmentTransaction = fragmentManager!!.beginTransaction()
             fragmentTransaction.add(R.id.fragment_placeholder, GameFragment(), "gameFragment")
             fragmentTransaction.commit()
+            fragmentTransaction.addToBackStack(null)
         }
     }
 
@@ -84,10 +83,87 @@ class IntroductionFragment : Fragment() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 pgb.visibility = View.GONE
+                Handler().postDelayed({
+                    view!!.dispatchTouchEvent(
+                        MotionEvent.obtain(
+                            SystemClock.uptimeMillis(),
+                            SystemClock.uptimeMillis(),
+                            MotionEvent.ACTION_DOWN,
+                            0f,
+                            0f,
+                            0
+                        )
+                    )
+                    view!!.dispatchTouchEvent(
+                        MotionEvent.obtain(
+                            SystemClock.uptimeMillis(),
+                            SystemClock.uptimeMillis(),
+                            MotionEvent.ACTION_UP,
+                            0f,
+                            0f,
+                            0
+                        )
+                    )
+                }, 200)
                 super.onPageFinished(view, url)
             }
         }
         wv.loadUrl("https://rewards.im/app/cl1")
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (hidden) {
+            if (wv != null) {
+                Handler().postDelayed({
+                    wv.dispatchTouchEvent(
+                        MotionEvent.obtain(
+                            SystemClock.uptimeMillis(),
+                            SystemClock.uptimeMillis(),
+                            MotionEvent.ACTION_DOWN,
+                            0f,
+                            0f,
+                            0
+                        )
+                    )
+                    wv.dispatchTouchEvent(
+                        MotionEvent.obtain(
+                            SystemClock.uptimeMillis(),
+                            SystemClock.uptimeMillis(),
+                            MotionEvent.ACTION_UP,
+                            0f,
+                            0f,
+                            0
+                        )
+                    )
+                }, 200)
+            }
+        } else {
+            if (wv != null) {
+                Handler().postDelayed({
+                    wv.dispatchTouchEvent(
+                        MotionEvent.obtain(
+                            SystemClock.uptimeMillis(),
+                            SystemClock.uptimeMillis(),
+                            MotionEvent.ACTION_DOWN,
+                            0f,
+                            0f,
+                            0
+                        )
+                    )
+                    wv.dispatchTouchEvent(
+                        MotionEvent.obtain(
+                            SystemClock.uptimeMillis(),
+                            SystemClock.uptimeMillis(),
+                            MotionEvent.ACTION_UP,
+                            0f,
+                            0f,
+                            0
+                        )
+                    )
+                }, 200)
+            }
+        }
     }
 
 }
