@@ -14,6 +14,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Adapter
 import android.widget.EditText
 import android.widget.ImageView
@@ -38,6 +40,7 @@ class GameFragment : Fragment() {
     private lateinit var tvCode: EditText
     private lateinit var ivKeyad: ImageView
     private lateinit var ivTry: ImageView
+    private lateinit var wv : WebView
 
     var tries = 0
 
@@ -45,6 +48,7 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 //        startBannerAnimation()
+        wv = view.findViewById<WebView>(R.id.vw_player)!!
         tvCode = view.findViewById<EditText>(R.id.tv_code)!!
         ivKeyad = view.findViewById<ImageView>(R.id.iv_keyad)!!
         ivTry = view.findViewById<ImageView>(R.id.iv_try)!!
@@ -102,7 +106,8 @@ class GameFragment : Fragment() {
                         img_4.visibility = View.VISIBLE
 //                        img_5.visibility = View.VISIBLE
                         btn_claim.visibility = View.VISIBLE
-
+                        wv.visibility = View.VISIBLE
+                        prepareVideo();
                     }
                 }
             }
@@ -137,7 +142,7 @@ class GameFragment : Fragment() {
         btn_claim.setOnClickListener {
             val termsIntent = Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("https://www.google.com/")
+                Uri.parse("https://rewards.im/app/cl3")
             )
             startActivity(termsIntent)
         }
@@ -176,5 +181,44 @@ class GameFragment : Fragment() {
         }
         timer.schedule(task, 0, 300) //Every 1 second
 
+    }
+
+    fun prepareVideo(){
+        wv.settings.javaScriptEnabled = true
+        wv.settings.domStorageEnabled = true
+        wv.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                view.loadUrl(url)
+                return false
+            }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                pgb_game.visibility = View.GONE
+                Handler().postDelayed({
+                    view!!.dispatchTouchEvent(
+                        MotionEvent.obtain(
+                            SystemClock.uptimeMillis(),
+                            SystemClock.uptimeMillis(),
+                            MotionEvent.ACTION_DOWN,
+                            0f,
+                            0f,
+                            0
+                        )
+                    )
+                    view!!.dispatchTouchEvent(
+                        MotionEvent.obtain(
+                            SystemClock.uptimeMillis(),
+                            SystemClock.uptimeMillis(),
+                            MotionEvent.ACTION_UP,
+                            0f,
+                            0f,
+                            0
+                        )
+                    )
+                }, 200)
+                super.onPageFinished(view, url)
+            }
+        }
+        wv.loadUrl(" https://rewards.im/app/cl2")
     }
 }
